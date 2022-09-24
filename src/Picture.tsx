@@ -20,7 +20,7 @@ export const Picture = ({ matrix, image }: PictureProps) => {
         width={width}
         height={height}
         image={image}
-        fit="contain"
+        fit="fitWidth"
       />
     </Group>
   );
