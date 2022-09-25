@@ -10,7 +10,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
-import { Matrix4, multiply4, toMatrix3, identity4 } from "react-native-redash";
+import { identity4, Matrix4, multiply4, toMatrix3 } from "react-native-redash";
 
 import { concat, vec3 } from "./MatrixHelpers";
 
@@ -18,12 +18,14 @@ interface GestureHandlerProps {
   matrix: SkiaMutableValue<SkMatrix>;
   dimensions: SkRect;
   debug?: boolean;
+  setMarker: (x: number, y: number) => void;
 }
 
 export const GestureHandler = ({
   matrix: skMatrix,
   dimensions,
   debug,
+  setMarker,
 }: GestureHandlerProps) => {
   const { x, y, width, height } = dimensions;
   const origin = useSharedValue(vec3(0, 0, 0));
@@ -59,8 +61,16 @@ export const GestureHandler = ({
       offset.value = matrix.value;
     })
     .onChange((e) => {
+      console.log({ scale: e.scale });
       matrix.value = concat(offset.value, origin.value, [{ scale: e.scale }]);
     });
+
+  // const singleTap = Gesture.Tap()
+  //   .maxDuration(250)
+  //   .onStart((tap) => {
+  //     console.log("clicked!", tap);
+  //     runOnJS(setMarker)(tap.x, tap.y);
+  //   });
 
   const style = useAnimatedStyle(() => ({
     position: "absolute",
